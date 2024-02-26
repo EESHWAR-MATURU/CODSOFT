@@ -1,0 +1,206 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+:root {
+    --primary-color: #1a936f;
+    --primary-color-dark: #11594e;
+    --secondary-color: #f9fafb;
+    --text-color: #555555;
+    --white: #ffffff;
+    --max-width: 1200px;
+}
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+body {
+    font-family: "Poppins", sans-serif;
+    background-color: var(--secondary-color);
+}
+nav {
+    max-width: var(--max-width);
+    margin: auto;
+    padding: 1rem;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--white);
+}
+.nav_logo a {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: .3s;
+}
+.nav_links {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.link a {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--text-color);
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.link a:hover {
+    color: var(--primary-color);
+}
+
+.link .nav_btn {
+    padding: 0.5rem 1.5rem;
+    font-size: 1.1rem;
+    color: var(--white) !important;
+    background-color: var(--primary-color);
+    border-radius: 8px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.link .nav_btn:hover {
+    background-color: var(--primary-color-dark);
+}
+.container {
+    max-width: var(--max-width);
+    margin: auto;
+    padding: 2rem;
+    min-height: calc(100vh - 80px);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem;
+}
+.content_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.content_container h1 {
+    font-size: 3.5rem;
+    font-weight: 600;
+    line-height: 4.5rem;
+    color: var(--primary-color-dark);
+    margin-bottom: 2rem;
+}
+
+.heading_1 {
+    font-weight: 700;
+}
+
+.heading_2 {
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.content_container p {
+    font-size: 1.2rem;
+    color: var(--text-color);
+    margin-bottom: 3rem;
+}
+
+.content_container form {
+    font-display: flex;
+    align-items: center;
+}
+
+.content_container input {
+    width: 100%;
+    max-width: 400px;
+    padding: 1.5rem;
+    font-size: 1rem;
+    outline: none;
+    border: none;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.content_container button {
+    padding: 1.5rem 2rem;
+    font-size: 1.1rem;
+    background-color: var(--primary-color);
+    color: var(--white);
+    outline: none;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.content_container button:hover {
+    background-color: var(--primary-color-dark);
+}
+
+.image_container {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.image_container img {
+    width: 90%;
+    max-width: 500px;
+    margin: auto;
+    border-radius: 15px;
+}
+
+.image_container img:nth-child(1) {
+    transform: translateY(100px);
+}
+
+.image_container img:nth-child(2) {
+    transform: translateY(100px);
+}
+
+.image_content {
+    position: absolute;
+    width: 90%;
+    max-width: 400px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--primary-color-dark);
+    color: var(--white);
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.image_content ul {
+    list-style: none;
+}
+
+.image_content li {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+@media (max-width: 900px) {
+    .link a:not(.nav_btn) {
+        display: none;
+    }
+
+    .container {
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    .content_container {
+        text-align: center;
+    }
+
+    .content_container form {
+        margin-right: auto;
+        margin-left: auto;
+        }
+        
+        .image_container {
+            grid-area: 1/1/2/2;
+        }
+        
+        .image_container img {
+            transform: translateY(0) !important;
+        }
+        
+}
