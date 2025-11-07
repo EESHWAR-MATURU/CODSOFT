@@ -1,43 +1,50 @@
-document.addEventListener('DOMContentLoaded', function() {
-  const buttons = document.querySelectorAll('.calculator button');
-  const display = document.getElementById('display');
-  let displayValue = '';
-  buttons.forEach(button => {
-    button.addEventListener('click', function() {
-      const buttonValue = button.textContent;
-      if (buttonValue === '=') {
-        calculate();
-      } 
-      else if (buttonValue === 'C') {
-        clearDisplay();
-      }
-       else if (buttonValue === '⌫') {
-        backspace(); 
-       }
-      else {
-        appendToDisplay(buttonValue);
-      }
-    });
-  });
-  function appendToDisplay(value) {
-    displayValue += value;
-    display.value = displayValue;
+const display = document.getElementById("display");
+const themeBtn = document.getElementById("theme-btn");
+let darkMode = false;
+
+// Insert value into display
+function insert(value) {
+  display.value += value;
+}
+
+// Clear all
+function clearDisplay() {
+  display.value = "";
+}
+
+// Delete last character
+function deleteLast() {
+  display.value = display.value.slice(0, -1);
+}
+
+// Evaluate expression
+function calculate() {
+  try {
+    let result = eval(display.value);
+    display.value = Number.isFinite(result) ? result : "Error";
+  } catch {
+    display.value = "Error";
   }
-  function clearDisplay() {
-    displayValue = '';
-    display.value = '';
-  }
-   function backspace() {
-    displayValue = displayValue.slice(0, -1); 
-    display.value = displayValue;
-  }
-  function calculate() {
-    try {
-      const result = eval(displayValue);
-      display.value = result;
-      displayValue = '';
-    } catch (error) {
-      display.value = 'Error';
-    }
+}
+
+// Toggle dark/light mode
+themeBtn.addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+  darkMode = !darkMode;
+  themeBtn.textContent = darkMode ? "☀️" : "🌙";
+});
+
+// Keyboard input support
+document.addEventListener("keydown", (e) => {
+  const key = e.key;
+  if (/[0-9+\-*/().]/.test(key)) {
+    insert(key);
+  } else if (key === "Enter") {
+    e.preventDefault();
+    calculate();
+  } else if (key === "Backspace") {
+    deleteLast();
+  } else if (key === "Escape") {
+    clearDisplay();
   }
 });

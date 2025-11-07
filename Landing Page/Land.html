@@ -1,10 +1,13 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-    <link rel="stylesheet" href="Land.css"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="Land.css" />
     <title>Genius Grove</title>
-    <style>
-    </style>
 </head>
+
 <body>
     <nav>
         <div class="nav_logo"><a href="#">Genius Grove Learning</a></div>
@@ -12,39 +15,52 @@
             <li class="link"><a href="#">Home</a></li>
             <li class="link"><a href="#">Overview</a></li>
             <li class="link"><a href="#">Courses list</a></li>
-            <li class="link"><a href="#">Subcribe Us</a></li>
+            <li class="link"><a href="#">Subscribe Us</a></li>
             <li class="link"><a href="#" class="nav_btn">Create Account</a></li>
         </ul>
+        <div class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
     </nav>
+
     <section class="container">
-        <div class="content_container">
-            <h1>EduExcellence<br>
+        <div class="content_container reveal">
+            <h1>
+                EduExcellence<br>
                 <span class="heading_1">StudyHub</span><br>
                 <span class="heading_2">in The Globe</span>
             </h1>
             <p>
-                Maximize your learning capabilities with our user-friendly educational platform. Harmoniously integrating technology and
-                learning, we offer an engaging educational atmosphere featuring interactive tutorials, virtual classrooms, and
+                Maximize your learning capabilities with our user-friendly educational platform. Harmoniously
+                integrating technology and
+                learning, we offer an engaging educational atmosphere featuring interactive tutorials, virtual
+                classrooms, and
                 insightful feedback.
             </p>
             <form>
                 <input type="text" placeholder="What subject are you interested in exploring?" />
                 <button type="submit">Explore Courses</button>
             </form>
+        </div>
+
+        <div class="image_container reveal">
+            <img src="i1.jpg" alt="Student learning online" class="hero_image_1" />
+            <img src="i2.jpg" alt="Interactive classroom" class="hero_image_2" />
+            <div class="image_content">
+                <ul>
+                    <li>Get 15% off 1st month</li>
+                    <li>Access offline content</li>
+                    <li>Receive certificates of completion</li>
+                    <li>Engage in hands-on projects</li>
+                    <li>Expert Faculty</li>
+                </ul>
             </div>
-            <div class="image_container">
-                <img src="i1.jpg" alt="header" />
-                <img src="i2.jpg" alt="header" />
-                <div class="image_content">
-                    <ul>
-                        <li>Get 15% off month on 1st month</li>
-                        <li>Access offline content</li>
-                        <li>Receive certificates of completion</li>
-                        <li>Engage in hands-on projects</li>
-                        <li>Expert Faculty</li>
-                    </ul>
-                </div>
-            </div>
-            </section>
+        </div>
+    </section>
+
+    <script src="Land.js"></script>
 </body>
+
 </html>

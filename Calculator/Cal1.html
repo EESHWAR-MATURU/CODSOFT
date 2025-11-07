@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Calculator</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Use Inter font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for the calculator */
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            /* Disable tap highlight on mobile */
+        }
+
+        /* Base button style */
+        .calc-button {
+            @apply rounded-2xl text-3xl font-medium transition-all duration-150 ease-in-out active:scale-95 active:shadow-inner;
+            padding: 1.25rem;
+            /* Using rem for consistent sizing */
+            aspect-ratio: 1 / 1;
+            /* Make buttons perfectly square */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            /* Prevent text selection */
+        }
+
+        /* Specific button color themes */
+        .btn-gray {
+            @apply bg-gray-600 text-white hover:bg-gray-500;
+        }
+
+        .btn-dark-gray {
+            @apply bg-gray-700 text-white hover:bg-gray-600;
+        }
+
+        .btn-orange {
+            @apply bg-orange-500 text-white hover:bg-orange-600 active:bg-orange-700;
+        }
+
+        /* Make '0' button wider */
+        .col-span-2 {
+            aspect-ratio: 2.15 / 1;
+            /* Adjust aspect ratio for double-wide button */
+        }
+
+        /* Make '=' button taller */
+        .row-span-2 {
+            aspect-ratio: 1 / 2.15;
+            /* Adjust aspect ratio for double-tall button */
+        }
+
+        /* Style for the display */
+        #display {
+            @apply w-full h-32 bg-transparent text-white text-right text-6xl font-light pr-6 pt-8 pb-4 break-all;
+            /* Allow text to shrink to fit */
+            overflow: hidden;
+            word-wrap: break-word;
+            line-height: 1.2;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-900 flex items-center justify-center min-h-screen p-4">
+
+    <!-- Calculator Body -->
+    <div class="bg-gray-800 max-w-sm w-full mx-auto rounded-3xl shadow-2xl overflow-hidden">
+
+        <!-- Display -->
+        <div class="p-4">
+            <div id="display" class="select-text">0</div>
+        </div>
+
+        <!-- Button Grid -->
+        <div id="buttons-container" class="grid grid-cols-4 gap-3 p-4">
+
+            <!-- Row 1 -->
+            <button class="calc-button btn-gray" data-action="clear">AC</button>
+            <button class="calc-button btn-gray" data-value="(">(</button>
+            <button class="calc-button btn-gray" data-value=")">)</button>
+            <button class="calc-button btn-orange" data-value="/">÷</button>
+
+            <!-- Row 2 -->
+            <button class="calc-button btn-gray" data-action="toggle-sign">±</button>
+            <button class="calc-button btn-gray" data-action="sqrt">√</button>
+            <button class="calc-button btn-gray" data-action="percent">%</button>
+            <button class="calc-button btn-orange" data-value="*">×</button>
+
+            <!-- Row 3 -->
+            <button class="calc-button btn-dark-gray" data-value="7">7</button>
+            <button class="calc-button btn-dark-gray" data-value="8">8</button>
+            <button class="calc-button btn-dark-gray" data-value="9">9</button>
+            <button class="calc-button btn-orange" data-value="-">−</button>
+
+            <!-- Row 4 -->
+            <button class="calc-button btn-dark-gray" data-value="4">4</button>
+            <button class="calc-button btn-dark-gray" data-value="5">5</button>
+            <button class="calc-button btn-dark-gray" data-value="6">6</button>
+            <button class="calc-button btn-orange" data-value="+">+</button>
+
+            <!-- Row 5 & 6 -->
+            <button class="calc-button btn-dark-gray" data-value="1">1</button>
+            <button class="calc-button btn-dark-gray" data-value="2">2</button>
+            <button class="calc-button btn-dark-gray" data-value="3">3</button>
+            <button class="calc-button btn-orange row-span-2" data-action="calculate">=</button>
+
+            <button class="calc-button btn-dark-gray col-span-2" data-value="0">0</button>
+            <button class="calc-button btn-dark-gray" data-value=".">.</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const displayElement = document.getElementById('display');
+            const buttonsContainer = document.getElementById('buttons-container');
+
+            let expression = '';
+            let lastResult = ''; // Store last result to prevent stacking operations on it
+
+            // Function to update the display
+            function updateDisplay() {
+                // Show '0' if expression is empty, otherwise show the expression
+                const displayText = expression || '0';
+
+                // Adjust font size based on text length to prevent overflow
+                const maxLength = 10;
+                if (displayText.length > maxLength) {
+                    const newSize = Math.max(1.5, 6 - (displayText.length - maxLength) * 0.4);
+                    displayElement.style.fontSize = `${newSize}rem`;
+                } else {
+                    displayElement.style.fontSize = '4rem'; // 6xl = 3.75rem, but we made it 6xl in tailwind, so 4rem
+                }
+
+                // Format numbers with commas, but only if it's a single number
+                if (/^[-+]?[\d\.]+$/.test(displayText)) {
+                    try {
+                        const parts = displayText.split('.');
+                        parts[0] = parseFloat(parts[0].replace(/,/g, '')).toLocaleString('en-US');
+                        displayElement.innerText = parts.join('.');
+                    } catch (e) {
+                        displayElement.innerText = displayText;
+                    }
+                } else {
+                    // For expressions, just show the text but with symbols
+                    displayElement.innerText = displayText
+                        .replace(/\*/g, '×')
+                        .replace(/\//g, '÷');
+                }
+            }
+
+            // Main click handler using event delegation
+            buttonsContainer.addEventListener('click', (e) => {
+                const button = e.target.closest('button');
+                if (!button) return;
+
+                const value = button.dataset.value;
+                const action = button.dataset.action;
+
+                // Clear "Error" or "Infinity" on new input
+                if (expression === 'Error' || expression === 'Infinity') {
+                    expression = '';
+                }
+
+                if (value) {
+                    // If we just calculated, and user presses a number, start a new expression
+                    if (lastResult) {
+                        // ...unless it's an operator, in which case, use the result
+                        if (/[\+\-\*\/]/.test(value)) {
+                            expression = lastResult;
+                        } else {
+                            expression = '';
+                        }
+                        lastResult = '';
+                    }
+
+                    // Prevent multiple leading zeros
+                    if (expression === '0' && value === '0') return;
+                    // Replace leading zero
+                    if (expression === '0' && value !== '.') expression = '';
+
+                    // Prevent multiple decimals in the same number
+                    const currentNumberMatch = expression.match(/[\d\.]+$/);
+                    if (value === '.' && currentNumberMatch && currentNumberMatch[0].includes('.')) {
+                        return;
+                    }
+
+                    expression += value;
+
+                } else if (action) {
+                    lastResult = ''; // Any action resets this
+
+                    switch (action) {
+                        case 'clear':
+                            expression = '';
+                            break;
+
+                        case 'calculate':
+                            if (expression === '') break;
+                            try {
+                                // Prepare expression for eval:
+                                // 1. Replace '√(' with 'Math.sqrt('
+                                // 2. Replace '%' with '/100'
+                                let evalExpression = expression
+                                    .replace(/√\(/g, 'Math.sqrt(')
+                                    .replace(/%/g, '/100')
+                                    .replace(/×/g, '*')
+                                    .replace(/÷/g, '/');
+
+                                // Security Check: Only allow valid characters.
+                                // This regex allows numbers, operators, parens, 'Math.sqrt', and '.'
+                                if (/[^0-9\.\+\-\*\/\(\)\sMath\.sqrt\/100]/.test(evalExpression)) {
+                                    throw new Error('Invalid Input');
+                                }
+
+                                // Use new Function() for a slightly safer eval
+                                const result = new Function('return ' + evalExpression)();
+
+                                if (!isFinite(result)) {
+                                    expression = 'Infinity';
+                                } else {
+                                    // Round to a reasonable number of decimal places
+                                    expression = String(parseFloat(result.toFixed(10)));
+                                    lastResult = expression; // Store for "ans" functionality
+                                }
+                            } catch (e) {
+                                console.error('Calculation Error:', e);
+                                expression = 'Error';
+                            }
+                            break;
+
+                        case 'sqrt':
+                            expression += '√(';
+                            break;
+
+                        case 'percent':
+                            // Appends '%' to be handled by eval as '/100'
+                            expression += '%';
+                            break;
+
+                        case 'toggle-sign':
+                            // Find the last number in the expression and negate it
+                            const lastNumMatch = expression.match(/(-?[\d\.]+)$/);
+                            if (lastNumMatch) {
+                                const lastNum = lastNumMatch[0];
+                                const start = expression.lastIndexOf(lastNum);
+                                const negatedNum = String(parseFloat(lastNum) * -1);
+
+                                // Replace the last number with its negated version
+                                expression = expression.slice(0, start) + negatedNum;
+                            } else if (expression === '') {
+                                // Start with a negative number
+                                expression = '-';
+                            }
+                            break;
+                    }
+                }
+
+                updateDisplay();
+            });
+
+            // Initial display update
+            updateDisplay();
+        });
+    </script>
+
+</body>
+
+</html>
